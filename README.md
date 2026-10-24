@@ -5,6 +5,8 @@ ves en pantalla. Captura una zona (como Imprimir pantalla), escribe qué quieres
 y **tu agente por defecto de Omarchy** recibe la imagen y la petición:
 *transcríbelo y guárdalo en mis notas*, *tradúcelo*, *crea esto*…
 
+▶ [Vídeo (33 s)](https://github.com/IAnMove/omarchy-notataker/releases/download/v1.0.0/notataker-demo.mp4): captura → petición → grok guarda la nota. *(English below.)*
+
 ## Instalar
 
 ```bash
@@ -70,5 +72,24 @@ es una garantía: con contenido en el que no confíes, pide cosas inocuas
   el prompt y lanza `omarchy-agent-prompt`.
 - `Overlay.qml` / `BarWidget.qml`: el panel y el icono (`overlay` + `bar-widget`).
 - `setup.sh`: comando, ajustes y atajo.
+
+## English
+
+Omarchy plugin: press `Shift+Print`, pick a window or region (Omarchy's own
+screenshot picker), type what you want done with it, and your **default Omarchy
+agent** gets the image and your request — "transcribe this into my notes",
+"translate it", "build this". The agent reads the image from its file path, so
+any agent that can open image files works (tested with grok). The UI strings are
+in Spanish.
+
+```bash
+omarchy plugin add https://github.com/IAnMove/omarchy-notataker.git --enable
+~/.config/omarchy/plugins/io.github.ianmove.notataker/setup.sh   # command + Shift+Print hotkey
+```
+
+Set your notes folder in `~/.config/notataker/config` (`NOTATAKER_NOTES_DIR`).
+Heads-up: Omarchy launches the default agent without permission prompts, and
+whatever is in the screenshot reaches it — treat screenshots of untrusted
+content as untrusted input.
 
 MIT, [IAnMove](https://github.com/IAnMove).
