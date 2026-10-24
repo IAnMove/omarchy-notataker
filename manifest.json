@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "io.github.ianmove.notataker",
+  "name": "Notataker",
+  "version": "1.0.0",
+  "author": "IAnMove",
+  "license": "MIT",
+  "description": "Captura una zona de la pantalla y pídele al agente de Omarchy qué hacer con ella: transcribirla a tus notas, traducirla, crear lo que se ve…",
+  "kinds": ["bar-widget", "overlay"],
+  "entryPoints": {
+    "barWidget": "BarWidget.qml",
+    "overlay": "Overlay.qml"
+  },
+  "barWidget": {
+    "displayName": "Notataker",
+    "description": "Captura de pantalla + petición al agente",
+    "category": "Utilities",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
