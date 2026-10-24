@@ -5,6 +5,8 @@ is on your screen. Capture a region (just like Print Screen), type what you want
 and your **default Omarchy agent** gets the image and your request: *transcribe
 this into my notes*, *translate it*, *build this*…
 
+▶ [Demo video (38 s)](https://github.com/IAnMove/omarchy-notataker/releases/download/v1.0.1/notataker-demo.mp4): capture → request → grok saves the note.
+
 ## Install
 
 ```bash
