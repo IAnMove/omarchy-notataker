@@ -1,15 +1,15 @@
 import Quickshell
 import Quickshell.Wayland
 import QtQuick
-import QtQuick.Controls          // antes de qs.Ui: así Button es el de Omarchy
+import QtQuick.Controls          // before qs.Ui, so Button is Omarchy's
 import QtQuick.Layouts
 import qs.Commons
 import qs.Ui
 
-// Panel de Notataker: la miniatura de la captura, una caja de texto para decirle
-// al agente qué hacer con ella y atajos con las peticiones más típicas.
-// `notataker` (bin/notataker) lo abre con summon y recibe de vuelta el texto
-// por `notataker --send`, que compone el prompt y lanza el agente de Omarchy.
+// Notataker panel: a thumbnail of the capture, a text box to tell the agent
+// what to do with it, and one-click shortcuts for the most common requests.
+// `notataker` (bin/notataker) opens it with summon and gets the text back
+// through `notataker --send`, which builds the prompt and launches Omarchy's agent.
 Item {
   id: root
 
@@ -33,14 +33,14 @@ Item {
   readonly property int cardWidth: Math.min(Style.space(640), panel.width - Style.gapsOut * 2)
   readonly property string command: root.bin !== "" ? root.bin : Quickshell.env("HOME") + "/.local/bin/notataker"
 
-  // Peticiones de un clic. Rellenan la caja de texto en vez de enviarse solas,
-  // para poder afinarlas antes de mandarlas.
+  // One-click requests. They fill the text box instead of sending right away,
+  // so they can be tweaked before going out.
   readonly property var presets: [
-    { label: "Transcribir a mis notas", text: "Transcribe el contenido de la captura y guárdalo en mis notas." },
-    { label: "Traducir", text: "Traduce al español el texto de la captura." },
-    { label: "Explicar", text: "Explícame qué hay en la captura." },
-    { label: "Resumir", text: "Resume el contenido de la captura en pocos puntos." },
-    { label: "Crear esto", text: "Crea lo que se ve en la captura: " }
+    { label: "Transcribe to my notes", text: "Transcribe the content of the screenshot and save it to my notes." },
+    { label: "Translate", text: "Translate the text in the screenshot into " },
+    { label: "Explain", text: "Explain what is in the screenshot." },
+    { label: "Summarize", text: "Summarize the content of the screenshot in a few bullet points." },
+    { label: "Build this", text: "Build what you see in the screenshot: " }
   ]
 
   function open(payloadJson) {
@@ -65,7 +65,7 @@ Item {
       root.shell.hide((root.manifest && root.manifest.id) || "io.github.ianmove.notataker")
   }
 
-  // Cancelar tira también la captura: sin petición no hay nada que enviar.
+  // Cancelling also throws the capture away: with no request there is nothing to send.
   function cancel() {
     if (root.image !== "") Quickshell.execDetached([root.command, "--discard", root.image])
     root.dismiss()
@@ -99,8 +99,8 @@ Item {
       color: root.scrim
     }
 
-    // Un clic fuera cancela, pero solo si no hay texto escrito: perder una
-    // petición a medias por un clic suelto es peor que tener que pulsar Esc.
+    // A click outside cancels, but only while nothing is typed: losing a
+    // half-written request to a stray click is worse than having to press Esc.
     MouseArea {
       anchors.fill: parent
       onClicked: if (input.text.trim() === "") root.cancel()
@@ -153,7 +153,7 @@ Item {
             fillMode: Image.PreserveAspectFit
             asynchronous: true
             cache: false
-            // Acota la textura: una captura 4K no necesita ocupar 33 MB para una miniatura.
+            // Bound the texture: a 4K capture doesn't need 33 MB for a thumbnail.
             sourceSize.width: 1600
             sourceSize.height: 900
           }
@@ -161,7 +161,7 @@ Item {
           Text {
             anchors.centerIn: parent
             visible: thumb.status === Image.Error
-            text: "No se pudo mostrar la captura"
+            text: "Couldn't show the screenshot"
             color: root.muted
             font.family: Style.font.menuFamily
             font.pixelSize: Style.font.body
@@ -203,7 +203,7 @@ Item {
             color: root.foreground
             selectionColor: Style.selectionFillFor(root.foreground, Color.accent)
             selectedTextColor: root.foreground
-            placeholderText: "¿Qué hago con la captura?   Enter envía · Mayús+Enter salta de línea"
+            placeholderText: "What should I do with the screenshot?   Enter sends · Shift+Enter new line"
             placeholderTextColor: root.muted
             font.family: Style.font.menuFamily
             font.pixelSize: Style.font.body
@@ -231,21 +231,21 @@ Item {
             Layout.fillWidth: true
             textFormat: Text.PlainText
             elide: Text.ElideMiddle
-            text: (root.agent !== "" ? "Agente: " + root.agent : "Sin agente por defecto")
-                  + (root.notesDir !== "" ? "  ·  Notas: " + root.notesDir : "")
+            text: (root.agent !== "" ? "Agent: " + root.agent : "No default agent")
+                  + (root.notesDir !== "" ? "  ·  Notes: " + root.notesDir : "")
             color: root.muted
             font.family: Style.font.menuFamily
             font.pixelSize: Style.font.bodySmall
           }
 
           Button {
-            text: "Cancelar (Esc)"
+            text: "Cancel (Esc)"
             fontFamily: Style.font.menuFamily
             onClicked: root.cancel()
           }
 
           Button {
-            text: "Enviar (Enter)"
+            text: "Send (Enter)"
             bordered: true
             selected: true
             fontFamily: Style.font.menuFamily

@@ -3,23 +3,23 @@ import Quickshell
 import qs.Commons
 import qs.Ui
 
-// Icono de Notataker en la barra: un clic captura una zona y abre el panel
-// (Overlay.qml) para decirle al agente qué hacer con ella. El mismo flujo se
-// lanza con el atajo de teclado (`notataker`).
+// Notataker bar icon: one click captures a region and opens the panel
+// (Overlay.qml) to tell the agent what to do with it. The hotkey runs the same
+// flow (`notataker`).
 Panel {
   id: root
   moduleName: "io.github.ianmove.notataker"
   manageIpc: false
 
-  // El script viaja con el plugin (bin/notataker): se localiza desde esta misma
-  // carpeta, así funciona tras `omarchy plugin add` sin copiar nada a ~/.local/bin.
+  // The script ships with the plugin (bin/notataker): it is found from this very
+  // folder, so it works after `omarchy plugin add` without copying anything to ~/.local/bin.
   readonly property string command: decodeURIComponent(Qt.resolvedUrl("bin/notataker").toString().replace(/^file:\/\//, ""))
 
   implicitWidth: button.implicitWidth
   implicitHeight: button.implicitHeight
 
-  // El selector congela la pantalla: se espera un momento a que el clic y el
-  // tooltip de la barra desaparezcan para que no salgan en la captura.
+  // The picker freezes the screen: wait a moment so the click and the bar
+  // tooltip are gone and don't end up in the capture.
   function capture() {
     Quickshell.execDetached(["sh", "-c", "sleep 0.3; exec \"$0\"", root.command])
   }
@@ -29,7 +29,7 @@ Panel {
     anchors.fill: parent
     bar: root.bar
     text: "󰹑"   // nf-md-monitor_screenshot
-    tooltipText: "Notataker: captura y pídele algo al agente"
+    tooltipText: "Notataker: capture and ask your agent"
     onPressed: function(b) {
       if (b === Qt.LeftButton) root.capture()
     }

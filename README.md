@@ -1,95 +1,73 @@
 # Notataker
 
-Plugin de [Omarchy](https://omarchy.org) para hablar con tu agente sobre lo que
-ves en pantalla. Captura una zona (como Imprimir pantalla), escribe qué quieres
-y **tu agente por defecto de Omarchy** recibe la imagen y la petición:
-*transcríbelo y guárdalo en mis notas*, *tradúcelo*, *crea esto*…
+An [Omarchy](https://omarchy.org) plugin for talking to your agent about whatever
+is on your screen. Capture a region (just like Print Screen), type what you want,
+and your **default Omarchy agent** gets the image and your request: *transcribe
+this into my notes*, *translate it*, *build this*…
 
-▶ [Vídeo (33 s)](https://github.com/IAnMove/omarchy-notataker/releases/download/v1.0.0/notataker-demo.mp4): captura → petición → grok guarda la nota. *(English below.)*
-
-## Instalar
+## Install
 
 ```bash
 omarchy plugin add https://github.com/IAnMove/omarchy-notataker.git --enable
 ~/.config/omarchy/plugins/io.github.ianmove.notataker/setup.sh
 ```
 
-La primera línea añade el icono a la barra y el panel. La segunda crea el
-comando `notataker` y el atajo **`Mayús + Imprimir`** en `~/.config/hypr/bindings.lua`
-(con copia de seguridad). Necesitas un agente por defecto:
+The first line adds the bar icon and the panel. The second creates the
+`notataker` command and the **`Shift + Print`** hotkey in
+`~/.config/hypr/bindings.lua` (with a backup). You need a default agent:
 `omarchy default agent <claude|codex|grok|…>`.
 
-Actualizar: `omarchy plugin update io.github.ianmove.notataker`.
-Quitar: `~/.config/omarchy/plugins/io.github.ianmove.notataker/setup.sh --uninstall`
-y después `omarchy plugin remove io.github.ianmove.notataker`.
+Update: `omarchy plugin update io.github.ianmove.notataker`.
+Remove: `~/.config/omarchy/plugins/io.github.ianmove.notataker/setup.sh --uninstall`,
+then `omarchy plugin remove io.github.ianmove.notataker`.
 
-> Los plugins de Omarchy se ejecutan sin sandbox dentro del shell. El código de
-> este es corto (`bin/notataker`, `Overlay.qml`, `BarWidget.qml`): léelo antes de activarlo.
+> Omarchy plugins run unsandboxed inside the shell. This one is short
+> (`bin/notataker`, `Overlay.qml`, `BarWidget.qml`): read it before you enable it.
 
-## Cómo se usa
+## How to use it
 
-1. `Mayús + Imprimir`, o clic en el icono de la barra, o `notataker`.
-2. Arrastra una zona o haz clic en una ventana. Con teclado: `Tab` cambia de
-   ventana y `Enter` captura la resaltada (es el selector de Omarchy).
-3. Sale un panel con la miniatura, una caja de texto y atajos de un clic
-   (*Transcribir a mis notas*, *Traducir*, *Explicar*, *Resumir*, *Crear esto*).
-   `Enter` envía, `Mayús + Enter` salta de línea, `Esc` cancela.
-4. Se abre tu agente con la captura y tu petición ya puestas.
+1. `Shift + Print`, or click the bar icon, or run `notataker`.
+2. Drag a region or click a window. From the keyboard: `Tab` cycles windows and
+   `Enter` captures the highlighted one (it is Omarchy's own picker).
+3. A panel shows a thumbnail, a text box and one-click shortcuts
+   (*Transcribe to my notes*, *Translate*, *Explain*, *Summarize*, *Build this*).
+   `Enter` sends, `Shift + Enter` adds a line, `Esc` cancels.
+4. Your agent opens with the capture and your request already in place.
 
-Como los agentes leen imágenes por ruta de archivo, el prompt incluye la ruta de
-la captura: no hace falta que tu agente tenga una opción especial para imágenes
-(probado con grok).
+Agents read images from a file path, so the prompt includes the path of the
+capture: your agent doesn't need any special image option (tested with grok).
 
-## Ajustes
+## Settings
 
-`~/.config/notataker/config` (lo crea `setup.sh`, con todo comentado):
+`~/.config/notataker/config` (created by `setup.sh`, everything commented out):
 
-| Variable | Por defecto | Para qué |
+| Variable | Default | What it does |
 |---|---|---|
-| `NOTATAKER_NOTES_DIR` | `~/Documents/Obsidian Vault` | Carpeta de tus notas. Se le dice al agente para cuando le pidas «guárdalo en mis notas». |
-| `NOTATAKER_CAPTURE_DIR` | `~/Pictures/Notataker` | Dónde se guardan las capturas. |
+| `NOTATAKER_NOTES_DIR` | `~/Documents/Obsidian Vault` | Your notes folder. The agent is told about it for when you ask it to "save it to my notes". |
+| `NOTATAKER_CAPTURE_DIR` | `~/Pictures/Notataker` | Where captures are saved. |
 
-Si cancelas el panel, la captura se borra. Si la envías, se queda en esa carpeta.
-Otro atajo: `NOTATAKER_KEY="SUPER + SHIFT + S" ./setup.sh`.
+If you cancel the panel, the capture is deleted. If you send it, it stays in that folder.
+Different hotkey: `NOTATAKER_KEY="SUPER + SHIFT + S" ./setup.sh`.
 
-Si quitas el icono de la barra, Omarchy da el plugin por desactivado y el panel
-deja de abrirse: el atajo sigue funcionando pero pregunta con la caja de texto
-simple del menú de Omarchy (sin miniatura ni atajos). Para volver al panel:
+If you remove the bar icon, Omarchy considers the plugin disabled and the panel
+stops opening: the hotkey still works but asks with the plain text box of
+Omarchy's menu (no thumbnail or shortcuts). To get the panel back:
 `omarchy plugin enable io.github.ianmove.notataker --section right`.
 
-## Seguridad
+## Security
 
-El agente por defecto de Omarchy se lanza **sin pedir permisos** (así lo
-configura `omarchy agent`). Todo lo que salga en la captura le llega al agente, y
-una web o un documento malicioso puede traer texto pensado para manipularlo. El
-prompt le dice que el texto de la imagen son datos y no instrucciones, pero no
-es una garantía: con contenido en el que no confíes, pide cosas inocuas
-(*transcribe*, *traduce*) y no que cree o ejecute algo.
+Omarchy launches the default agent **without permission prompts** (that is how
+`omarchy agent` configures it). Everything in the screenshot reaches the agent,
+and a malicious web page or document can carry text meant to manipulate it. The
+prompt tells the agent that text inside the image is data, not instructions, but
+that is not a guarantee: with content you don't trust, ask for harmless things
+(*transcribe*, *translate*) rather than for it to create or run something.
 
-## Cómo está hecho
+## How it works
 
-- `bin/notataker`: captura con `omarchy-capture-screenshot`, abre el panel, compone
-  el prompt y lanza `omarchy-agent-prompt`.
-- `Overlay.qml` / `BarWidget.qml`: el panel y el icono (`overlay` + `bar-widget`).
-- `setup.sh`: comando, ajustes y atajo.
-
-## English
-
-Omarchy plugin: press `Shift+Print`, pick a window or region (Omarchy's own
-screenshot picker), type what you want done with it, and your **default Omarchy
-agent** gets the image and your request — "transcribe this into my notes",
-"translate it", "build this". The agent reads the image from its file path, so
-any agent that can open image files works (tested with grok). The UI strings are
-in Spanish.
-
-```bash
-omarchy plugin add https://github.com/IAnMove/omarchy-notataker.git --enable
-~/.config/omarchy/plugins/io.github.ianmove.notataker/setup.sh   # command + Shift+Print hotkey
-```
-
-Set your notes folder in `~/.config/notataker/config` (`NOTATAKER_NOTES_DIR`).
-Heads-up: Omarchy launches the default agent without permission prompts, and
-whatever is in the screenshot reaches it — treat screenshots of untrusted
-content as untrusted input.
+- `bin/notataker`: captures with `omarchy-capture-screenshot`, opens the panel,
+  builds the prompt and launches `omarchy-agent-prompt`.
+- `Overlay.qml` / `BarWidget.qml`: the panel and the icon (`overlay` + `bar-widget`).
+- `setup.sh`: command, settings and hotkey.
 
 MIT, [IAnMove](https://github.com/IAnMove).
